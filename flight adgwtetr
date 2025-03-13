@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int dest;
+    struct Node* next;
+} Node;
+
+typedef struct AdjList {
+    Node* head;
+} AdjList;
+
+AdjList* array;
+int V; 
+
+Node* createNode(int dest) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->dest = dest;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void createGraph(int vertices) { 
+    V = vertices; 
+    array = (AdjList*)malloc(V * sizeof(AdjList));
+
+    for (int i = 0; i < V; i++) {
+        array[i].head = NULL;
+    }
+}
+
+void addEdge(int src, int dest) {
+    Node* newNode = createNode(dest);
+    newNode->next = array[src].head;
+    array[src].head = newNode;
+
+    newNode = createNode(src);
+    newNode->next = array[dest].head;
+    array[dest].head = newNode;
+}
+
+void printGraph() {
+    for (int v = 0; v < V; v++) {
+        Node* pCrawl = array[v].head;
+        printf("\n Adjacency list of vertex %d\n head ", v);
+        while (pCrawl) {
+            printf("-> %d", pCrawl->dest);
+            pCrawl = pCrawl->next;
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int vertices;
+    printf("Enter the number of vertices: ");
+    scanf("%d", &vertices);
+
+    createGraph(vertices);
+
+    int numEdges;
+    printf("Enter the number of edges: ");
+    scanf("%d", &numEdges);
+
+    for (int i = 0; i < numEdges; i++) {
+        int src, dest;
+        scanf("%d %d", &src, &dest);
+        addEdge(src, dest);
+    }
+
+    printGraph();
+
+    return 0;
+}
